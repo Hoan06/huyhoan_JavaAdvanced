@@ -18,11 +18,11 @@ class UserServiceTest {
     void tearDown() {
     }
 
-    @Test
-    @DisplayName("Kiểm tra thêm thành công")
-    void addUserTest() {
-        assertEquals(1,);
-    }
+//    @Test
+//    @DisplayName("Kiểm tra thêm thành công")
+//    void addUserTest() {
+//        assertEquals(1,);
+//    }
 
     @Test
     void findUserById() {
