@@ -3,10 +3,7 @@ package ra.dao;
 import ra.entity.Employee;
 import ra.util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +25,9 @@ public class EmployeeDaoImpl implements IEmployeeDao {
 
         try (
                 Connection conn = DBConnection.openConnection();
-                Statement stmt = conn.createStatement();
+                PreparedStatement stmt = conn.prepareStatement(sql);
         ) {
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Employee e = mapToEmployee(rs);
                 list.add(e);
@@ -45,19 +42,18 @@ public class EmployeeDaoImpl implements IEmployeeDao {
     @Override
     public boolean insert(Employee e) {
         String sql = String.format(
-                "insert into employee(empId, empName, age, salary) values ('%s', '%s', %d, %s)",
-                e.getEmpId(),
-                e.getEmpName(),
-                e.getAge(),
-                Double.toString(e.getSalary()).replace(",", ".")
-        );
+                "insert into employee(empId, empName, age, salary) values (?, ?, ?, ?)");
 
 
         try (
                 Connection conn = DBConnection.openConnection();
-                Statement stmt = conn.createStatement()
+                PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-            int count = stmt.executeUpdate(sql);
+            stmt.setString(1, e.getEmpId());
+            stmt.setString(2, e.getEmpName());
+            stmt.setInt(3, e.getAge());
+            stmt.setDouble(4, e.getSalary());
+            int count = stmt.executeUpdate();
             return count > 0;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -66,13 +62,14 @@ public class EmployeeDaoImpl implements IEmployeeDao {
 
     @Override
     public boolean delete(String idInput) {
-        String sql = String.format("delete from employee where empId = '%s'", idInput);
+        String sql = String.format("delete from employee where empId = ?");
 
         try (
                 Connection conn = DBConnection.openConnection();
-                Statement stmt = conn.createStatement();
+                PreparedStatement stmt = conn.prepareStatement(sql);
         ){
-            int count = stmt.executeUpdate(sql);
+            stmt.setString(1,idInput);
+            int count = stmt.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -81,7 +78,7 @@ public class EmployeeDaoImpl implements IEmployeeDao {
 
     @Override
     public boolean updateNameById(String id , String newName) {
-        String sql = String.format("update employee set empName = '%s' where empId = '%s'", newName, id);
+        String sql = String.format("update employee set empName = ? where empId = ?");
 
         try (
                 Connection conn = DBConnection.openConnection();
