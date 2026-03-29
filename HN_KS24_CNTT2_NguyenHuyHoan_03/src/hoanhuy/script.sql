@@ -1,4 +1,4 @@
---
+
 -- DROP TABLE IF EXISTS order_items;
 -- DROP TABLE IF EXISTS orders;
 -- DROP TABLE IF EXISTS reviews;
@@ -17,10 +17,8 @@ create table accounts(
 
 create table tables(
     id int auto_increment primary key,
-    number int not null,
     isEmpty boolean not null,
     limited int not null,
-    check(number > 0),
     check(limited > 0)
 );
 
@@ -47,7 +45,7 @@ create table order_items(
     order_id int ,
     menu_item_id int ,
     quantity int ,
-    status enum('PENDING', 'COOKING', 'READY', 'SERVED'),
+    status enum('PENDING_APPROVAL', 'REJECTED' , 'PENDING', 'COOKING', 'READY', 'SERVED'),
     foreign key(order_id) references orders(id),
     foreign key(menu_item_id) references menu_items(id)
 );

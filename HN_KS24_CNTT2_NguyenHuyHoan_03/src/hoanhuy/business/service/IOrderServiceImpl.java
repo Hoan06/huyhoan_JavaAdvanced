@@ -1,0 +1,65 @@
+package hoanhuy.business.service;
+
+import hoanhuy.business.dao.IOrderDao;
+import hoanhuy.business.dao.IOrderDaoImpl;
+import hoanhuy.business.dao.ITableDao;
+import hoanhuy.business.dao.ITableDaoImpl;
+import hoanhuy.model.entity.Order;
+import hoanhuy.model.entity.Table;
+import hoanhuy.utils.Color;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+
+public class IOrderServiceImpl implements IOrderService {
+    private static final IOrderDao orderDao = new IOrderDaoImpl();
+    private static final ITableDao tableDao = new ITableDaoImpl();
+
+    @Override
+    public List<Order> findAll() {
+        return orderDao.findAll();
+    }
+
+    @Override
+    public void orderTable(int idCus) {
+        Scanner sc = new Scanner(System.in);
+        Order order = new Order();
+        int idTable;
+        while (true) {
+            try {
+                System.out.print("Nhập id bàn muốn đặt : ");
+                idTable = Integer.parseInt(sc.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(Color.YELLOW + "Id bàn phải là số nguyên hợp lệ !" + Color.RESET);
+            }
+        }
+        if (idTable <= 0) {
+            System.out.println(Color.YELLOW + "Id bàn không hợp lệ !" + Color.RESET);
+            return;
+        }
+        if (tableDao.findById(idTable) == null) {
+            System.out.println(Color.YELLOW + "Bàn không tồn tại !" + Color.RESET);
+            return;
+        }
+        Table table = tableDao.findById(idTable);
+        if (!table.isEmpty()){
+            System.out.println(Color.YELLOW + "Bàn đã được người khác đặt vui lòng chọn bàn khác !" + Color.RESET);
+            return;
+        }
+        order.setCustomerId(idCus);
+        order.setTableId(idTable);
+        order.setPay(false);
+        boolean result = orderDao.insert(order);
+        if (result) {
+            tableDao.updateIsEmpty(idTable);
+            System.out.println("Đặt bàn thành công .");
+        } else {
+            System.out.println("Đặt bàn thất bại !");
+        }
+    }
+
+
+}
+

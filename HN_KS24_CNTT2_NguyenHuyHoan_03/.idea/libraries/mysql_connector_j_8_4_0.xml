@@ -5,6 +5,7 @@
       <root url="jar://$PROJECT_DIR$/../../../Jdbc/Thư viện ẩn password/jline-3.26.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../Jdbc/Thư viện ẩn password/jline-terminal-3.26.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../Jdbc/Thư viện ẩn password/jline-terminal-jna-3.26.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Jdbc/jbcrypt-0.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

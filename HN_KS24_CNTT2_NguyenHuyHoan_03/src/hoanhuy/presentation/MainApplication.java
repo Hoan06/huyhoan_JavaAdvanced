@@ -22,7 +22,7 @@ public class MainApplication {
         IAccountDao accountDao = new IAccountDaoImpl();
         if (!accountDao.findAccountByUsername("admin")) {
             Account admin = new Account();
-            admin.setFullName("Administrator");
+            admin.setFullName("Administrator 36");
             admin.setUsername("admin");
             admin.setPassword("admin123");
             admin.setRole(Role.MANAGER);

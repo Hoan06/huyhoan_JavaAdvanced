@@ -69,4 +69,24 @@ public class MenuItem {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public void displayData() {
+        System.out.printf("| %-4d | %-20s | %-12s | %-10s | %-8d |%n",
+                id,
+                name,
+                price,
+                type,
+                stock);
+    }
+
+    public static void printHeader() {
+        System.out.println("┌──────┬──────────────────────┬──────────────┬────────────┬──────────┐");
+        System.out.println("│ ID   │ Tên món              │ Giá          │ Loại       │ Số lượng │");
+        System.out.println("├──────┼──────────────────────┼──────────────┼────────────┼──────────┤");
+    }
+
+    public static void printFooter() {
+        System.out.println("└──────┴──────────────────────┴──────────────┴────────────┴──────────┘");
+    }
+
 }
