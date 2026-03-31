@@ -30,8 +30,7 @@ public class IReviewServiceImpl implements IReviewService {
     @Override
     public void insertReview(int idCus) {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Lựa chọn số sao ( 1 - 5 ) : ");
-        int star = Integer.parseInt(sc.nextLine());
+        int star = Validator.getInt(sc , "Lựa chọn số sao ( 1 - 5 ) : ");
         if (Validator.isValidInt(star) || star > 5){
             System.out.println(Color.YELLOW + "Số sao đánh giá không hợp lệ !" + Color.RESET);
             return;

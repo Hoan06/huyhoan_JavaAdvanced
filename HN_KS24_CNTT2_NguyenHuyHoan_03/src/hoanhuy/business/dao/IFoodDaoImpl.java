@@ -2,6 +2,7 @@ package hoanhuy.business.dao;
 
 import hoanhuy.model.entity.MenuItem;
 import hoanhuy.model.entity.MenuItemType;
+import hoanhuy.utils.Color;
 import hoanhuy.utils.DBConnection;
 
 import java.math.BigDecimal;
@@ -39,7 +40,8 @@ public class IFoodDaoImpl implements IFoodDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
     }
 
@@ -56,7 +58,8 @@ public class IFoodDaoImpl implements IFoodDao {
                 return mapToFood(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
         return null;
     }
@@ -75,7 +78,8 @@ public class IFoodDaoImpl implements IFoodDao {
             int count = ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 
@@ -91,7 +95,8 @@ public class IFoodDaoImpl implements IFoodDao {
             int count = ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 
@@ -106,7 +111,8 @@ public class IFoodDaoImpl implements IFoodDao {
             int count = ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 
@@ -126,7 +132,8 @@ public class IFoodDaoImpl implements IFoodDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
     }
 
@@ -149,7 +156,8 @@ public class IFoodDaoImpl implements IFoodDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
     }
 
@@ -165,9 +173,27 @@ public class IFoodDaoImpl implements IFoodDao {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return 0;
         }
         return 0;
+    }
+
+    @Override
+    public boolean updateStock(int idFoods, int quantity) {
+        String sql = "update menu_items set stock = stock - ? where id = ?";
+        try (
+                Connection conn = DBConnection.openConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ){
+            ps.setInt(1, quantity);
+            ps.setInt(2, idFoods);
+            int count = ps.executeUpdate();
+            return count > 0;
+        } catch (SQLException e) {
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
+        }
     }
 
 }

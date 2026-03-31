@@ -1,7 +1,9 @@
 package hoanhuy.business.dao;
 
+import hoanhuy.model.entity.MenuItem;
 import hoanhuy.model.entity.OrderItem;
 import hoanhuy.model.entity.OrderItemStatus;
+import hoanhuy.utils.Color;
 import hoanhuy.utils.DBConnection;
 
 import java.sql.Connection;
@@ -38,8 +40,51 @@ public class IOrderItemsDaoImpl implements IOrderItemsDao {
             }
             return orderItems;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
+    }
+
+    @Override
+    public List<OrderItem> findAllByOrderIdManager(int idOrder) {
+        String sql = "select id , order_id , menu_item_id , quantity , status from order_items where order_id = ? and status = ?";
+        try(
+                Connection conn = DBConnection.openConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setInt(1, idOrder);
+            ps.setString(2,"PENDING_APPROVAL");
+            ResultSet rs = ps.executeQuery();
+            List<OrderItem> orderItems = new ArrayList<>();
+            while(rs.next()){
+                OrderItem orderItem = mapToOrderItem(rs);
+                orderItems.add(orderItem);
+            }
+            return orderItems;
+        } catch (SQLException e) {
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
+        }
+    }
+
+    @Override
+    public List<OrderItem> findAllOfChef() {
+        String sql = "select id , order_id , menu_item_id , quantity , status from order_items where status IN ('PENDING', 'COOKING', 'READY', 'SERVED') ";
+        List<OrderItem> list = new ArrayList<>();
+        try (
+                Connection conn = DBConnection.openConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                OrderItem orderItem = mapToOrderItem(rs);
+                list.add(orderItem);
+            }
+        } catch (SQLException e) {
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu : " + e.getMessage() + Color.RESET);
+            return null;
+        }
+        return list;
     }
 
     @Override
@@ -56,7 +101,8 @@ public class IOrderItemsDaoImpl implements IOrderItemsDao {
             int count =  ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 
@@ -72,7 +118,8 @@ public class IOrderItemsDaoImpl implements IOrderItemsDao {
             int count =  ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 
@@ -87,7 +134,8 @@ public class IOrderItemsDaoImpl implements IOrderItemsDao {
             int count =  ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 
@@ -104,7 +152,8 @@ public class IOrderItemsDaoImpl implements IOrderItemsDao {
                 return mapToOrderItem(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
         return null;
     }

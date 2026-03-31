@@ -1,6 +1,7 @@
 package hoanhuy.business.dao;
 
 import hoanhuy.model.entity.Review;
+import hoanhuy.utils.Color;
 import hoanhuy.utils.DBConnection;
 
 import java.sql.Connection;
@@ -34,7 +35,8 @@ public class IReviewDaoImpl implements IReviewDao {
             }
             return reviews;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
     }
 
@@ -56,7 +58,8 @@ public class IReviewDaoImpl implements IReviewDao {
             }
             return reviews;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return null;
         }
     }
 
@@ -73,7 +76,8 @@ public class IReviewDaoImpl implements IReviewDao {
             }
             return 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return 0;
         }
     }
 
@@ -91,7 +95,8 @@ public class IReviewDaoImpl implements IReviewDao {
             int count =  ps.executeUpdate();
             return count > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu" + e.getMessage() + Color.RESET);
+            return false;
         }
     }
 }

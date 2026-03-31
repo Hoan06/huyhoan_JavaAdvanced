@@ -7,6 +7,7 @@ import hoanhuy.business.service.IReviewServiceImpl;
 import hoanhuy.model.entity.Account;
 import hoanhuy.model.entity.Review;
 import hoanhuy.utils.Color;
+import hoanhuy.validate.Validator;
 
 import java.util.List;
 import java.util.Scanner;
@@ -33,8 +34,7 @@ public class RestaurantView {
                 │                       │                             │
                 └───────────────────────┴─────────────────────────────┘
                 """);
-            System.out.print("Lựa chọn của bạn : ");
-            choice = Integer.parseInt(sc.nextLine());
+            choice = Validator.getInt(sc,"Lựa chọn của bạn : ");
 
             switch (choice) {
                 case 1:
@@ -62,19 +62,28 @@ public class RestaurantView {
     private static void login() {
         Account currentAccount = accountLoginAndRegister.login();
 
-        if (currentAccount != null) {
-            switch (currentAccount.getRole()) {
-                case MANAGER:
-                    ManagerView.showManagerMenu(currentAccount);
-                    break;
-                case CHEF:
-                    break;
-                case CUSTOMER:
-                    CustomerView.showCustomerManagement(currentAccount);
-                    break;
-            }
-        } else {
-            System.out.println("Đăng nhập thất bại .");
+        if (currentAccount == null){
+            System.out.println(Color.RED + "Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu!" + Color.RESET);
+            return;
+        }
+        if (currentAccount.isBan()) {
+            System.out.println(Color.YELLOW + "Tài khoản đã bị khóa, không thể đăng nhập!" + Color.RESET);
+            return;
+        }
+
+        switch (currentAccount.getRole()) {
+            case MANAGER:
+                System.out.println("Đăng nhập thành công .");
+                ManagerView.showManagerMenu(currentAccount);
+                break;
+            case CHEF:
+                System.out.println("Đăng nhập thành công .");
+                ChefView.showChefManagement(currentAccount);
+                break;
+            case CUSTOMER:
+                System.out.println("Đăng nhập thành công .");
+                CustomerView.showCustomerManagement(currentAccount);
+                break;
         }
     }
 

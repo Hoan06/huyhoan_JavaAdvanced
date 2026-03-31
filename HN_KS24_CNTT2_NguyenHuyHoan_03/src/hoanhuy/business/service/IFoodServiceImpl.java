@@ -44,8 +44,7 @@ public class IFoodServiceImpl implements IFoodService {
 
             int stock;
             try {
-                System.out.print("Nhập số lượng : ");
-                stock = Integer.parseInt(sc.nextLine());
+                stock = Validator.getInt(sc , "Nhập số lượng : ");
             } catch (NumberFormatException e) {
                 System.out.println(Color.YELLOW + "Số lượng phải là số nguyên hợp lệ !" + Color.RESET);
                 continue;
@@ -92,8 +91,7 @@ public class IFoodServiceImpl implements IFoodService {
     @Override
     public void updateFood() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Nhập id món ăn cập nhật : ");
-        int id = Integer.parseInt(sc.nextLine());
+        int id = Validator.getInt(sc , "Nhập id món ăn cập nhật : ");
         if (foodDao.findById(id) == null){
             System.out.println(Color.YELLOW + "Món ăn không tồn tại !" + Color.RESET);
             return;
@@ -102,6 +100,10 @@ public class IFoodServiceImpl implements IFoodService {
         try {
             System.out.print("Nhập giá mới cho món ăn : ");
             price = new BigDecimal(sc.nextLine());
+            if (price.compareTo(BigDecimal.ZERO) <= 0) {
+                System.out.println(Color.YELLOW + "Giá phải lớn hơn 0 !" + Color.RESET);
+                return;
+            }
         } catch (NumberFormatException e) {
             System.out.println(Color.YELLOW + "Giá món ăn phải là số hợp lệ !" + Color.RESET);
             return;
@@ -118,8 +120,7 @@ public class IFoodServiceImpl implements IFoodService {
     @Override
     public void deleteFood() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Nhập id món ăn muốn xóa : ");
-        int id = Integer.parseInt(sc.nextLine());
+        int id = Validator.getInt(sc , "Nhập id món ăn muốn xóa : ");
         if (foodDao.findById(id) == null){
             System.out.println(Color.YELLOW + "Món ăn không tồn tại !" + Color.RESET);
             return;
@@ -154,12 +155,9 @@ public class IFoodServiceImpl implements IFoodService {
     }
 
     @Override
-    public boolean findFoodById(int id) {
+    public MenuItem findFoodById(int id) {
         MenuItem menuItem =  foodDao.findById(id);
-        if (menuItem == null){
-            return false;
-        }
-        return true;
+        return menuItem;
     }
 
     @Override

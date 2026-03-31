@@ -42,13 +42,12 @@ public class CustomerView {
                 │                                │                                   │
                 ├────────────────────────────────┼───────────────────────────────────┤
                 │                                │                                   │
-                │     7. Trả bàn                 │     8. Đăng xuất                  │
+                │     7. Đăng xuất               │                                   │
                 │                                │                                   │
                 └────────────────────────────────┴───────────────────────────────────┘
                 """, account.getFullName());
 
-            System.out.print("Lựa chọn của bạn: ");
-            choice = Integer.parseInt(sc.nextLine());
+            choice = Validator.getInt(sc , "Lựa chọn của bạn : ");
 
             switch (choice) {
                 case 1:
@@ -70,15 +69,12 @@ public class CustomerView {
                     reviewService.insertReview(account.getAccountId());
                     break;
                 case 7:
-                    tableService.returnTable(account);
-                    break;
-                case 8:
-                    System.out.println("Đăng xuất .");
+                    System.out.println("Đăng xuất thành công .");
                     break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ.");
             }
-        } while (choice != 8);
+        } while (choice != 7);
     }
 
     private static void displayAllFood() {
@@ -163,7 +159,7 @@ public class CustomerView {
             System.out.println(Color.YELLOW + "Id món ăn không hợp lệ !" + Color.RESET);
             return;
         }
-        if (!foodService.findFoodById(foodId)){
+        if (foodService.findFoodById(foodId) == null) {
             System.out.println(Color.YELLOW + "Món ăn không tồn tại !" + Color.RESET);
             return;
         }

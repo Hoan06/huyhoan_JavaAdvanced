@@ -4,6 +4,7 @@ import hoanhuy.business.service.ITableService;
 import hoanhuy.business.service.ITableServiceImpl;
 import hoanhuy.model.entity.MenuItem;
 import hoanhuy.model.entity.Table;
+import hoanhuy.validate.Validator;
 
 import java.util.List;
 import java.util.Scanner;
@@ -28,8 +29,7 @@ public class TableView {
                 └──────────────────────────────┴─────────────────────────────┘
                 """);
 
-            System.out.print("Lựa chọn của bạn: ");
-            choice = Integer.parseInt(sc.nextLine());
+            choice = Validator.getInt(sc,"Lựa chọn của bạn : ");
 
             switch (choice) {
                 case 1:

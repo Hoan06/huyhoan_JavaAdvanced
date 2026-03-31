@@ -11,7 +11,8 @@ public interface ITableService {
     void insertTable();
     void updateTable();
     void deleteTable();
-    void returnTable(Account account);
+    void returnTable(int idTable);
+    Table findTableById(int id);
     List<Table> getTableByPage(int page , int pagesize);
     int countTable();
 }

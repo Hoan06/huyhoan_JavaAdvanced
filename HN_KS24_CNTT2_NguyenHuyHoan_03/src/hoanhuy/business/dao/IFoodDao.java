@@ -14,4 +14,5 @@ public interface IFoodDao {
     List<MenuItem> findByName(String name);
     List<MenuItem> findByPage(int page, int pageSize);
     int countFoods();
+    boolean updateStock(int idFoods , int quantity);
 }

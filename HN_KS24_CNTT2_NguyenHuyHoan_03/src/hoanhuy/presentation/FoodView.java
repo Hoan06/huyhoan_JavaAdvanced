@@ -3,6 +3,7 @@ package hoanhuy.presentation;
 import hoanhuy.business.service.IFoodService;
 import hoanhuy.business.service.IFoodServiceImpl;
 import hoanhuy.model.entity.MenuItem;
+import hoanhuy.validate.Validator;
 
 import java.util.List;
 import java.util.Scanner;
@@ -27,8 +28,7 @@ public class FoodView {
                 └──────────────────────────────┴─────────────────────────────┘
                 """);
 
-            System.out.print("Lựa chọn của bạn: ");
-            choice = Integer.parseInt(sc.nextLine());
+            choice = Validator.getInt(sc,"Lựa chọn của bạn : ");
 
             switch (choice) {
                 case 1:

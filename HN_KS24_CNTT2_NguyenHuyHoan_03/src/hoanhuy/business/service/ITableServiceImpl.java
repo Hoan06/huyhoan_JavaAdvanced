@@ -7,6 +7,7 @@ import hoanhuy.model.entity.OrderItem;
 import hoanhuy.model.entity.Table;
 import hoanhuy.utils.Color;
 import hoanhuy.utils.DBConnection;
+import hoanhuy.validate.Validator;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -53,8 +54,7 @@ public class ITableServiceImpl implements ITableService {
     @Override
     public void updateTable() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Nhập id bàn muốn cập nhật : ");
-        int idInput = Integer.parseInt(sc.nextLine());
+        int idInput = Validator.getInt(sc , "Nhập id bàn muốn cập nhật : ");
         if (idInput <= 0) {
             System.out.println(Color.YELLOW + "Id không hợp lệ !" + Color.RESET);
             return;
@@ -63,8 +63,7 @@ public class ITableServiceImpl implements ITableService {
             System.out.println(Color.YELLOW + "Bàn không tồn tại !" + Color.RESET);
             return;
         }
-        System.out.print("Nhập sức chứa mới : ");
-        int limit = Integer.parseInt(sc.nextLine());
+        int limit = Validator.getInt(sc , "Nhập sức chứa mới : ");
         if (limit <= 0) {
             System.out.println(Color.YELLOW + "Sức chứa phải lớn hơn 0 !" + Color.RESET);
             return;
@@ -80,8 +79,7 @@ public class ITableServiceImpl implements ITableService {
     @Override
     public void deleteTable() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Nhập id bàn muốn xóa : ");
-        int id = Integer.parseInt(sc.nextLine());
+        int id = Validator.getInt(sc , "Nhập id bàn muốn xóa : ");
         if (id <= 0) {
             System.out.println(Color.YELLOW + "Id không hợp lệ !" + Color.RESET);
             return;
@@ -99,20 +97,13 @@ public class ITableServiceImpl implements ITableService {
     }
 
     @Override
-    public void returnTable(Account account) {
-        Order order = orderDao.findByCustomerId(account.getAccountId());
-        List<OrderItem> orderItems = orderItemsDao.findAllByOrderId(order.getId());
-        if (!order.isPay() && !orderItems.isEmpty()) {
-            System.out.println(Color.YELLOW + "Bạn chưa thanh toán hóa đơn !" +  Color.RESET);
-            return;
-        }
-        int idTable = order.getTableId();
-        boolean result = tableDao.returnTable(idTable);
-        if (result) {
-            System.out.println("Trả bàn thành công .");
-        } else {
-            System.out.println("Trả bàn thất bại !");
-        }
+    public void returnTable(int idTable) {
+        tableDao.returnTable(idTable);
+    }
+
+    @Override
+    public Table findTableById(int id) {
+        return tableDao.findById(id);
     }
 
     @Override

@@ -7,6 +7,7 @@ import hoanhuy.business.dao.ITableDaoImpl;
 import hoanhuy.model.entity.Order;
 import hoanhuy.model.entity.Table;
 import hoanhuy.utils.Color;
+import hoanhuy.validate.Validator;
 
 import java.util.Comparator;
 import java.util.List;
@@ -28,8 +29,7 @@ public class IOrderServiceImpl implements IOrderService {
         int idTable;
         while (true) {
             try {
-                System.out.print("Nhập id bàn muốn đặt : ");
-                idTable = Integer.parseInt(sc.nextLine());
+                idTable = Validator.getInt(sc , "Nhập id bàn muốn đặt : ");
                 break;
             } catch (NumberFormatException e) {
                 System.out.println(Color.YELLOW + "Id bàn phải là số nguyên hợp lệ !" + Color.RESET);
@@ -58,6 +58,16 @@ public class IOrderServiceImpl implements IOrderService {
         } else {
             System.out.println("Đặt bàn thất bại !");
         }
+    }
+
+    @Override
+    public Order findByTable(int idTable) {
+        return orderDao.findByTable(idTable);
+    }
+
+    @Override
+    public void updateIsPay(int orderId) {
+        orderDao.updateIsPay(orderId);
     }
 
 

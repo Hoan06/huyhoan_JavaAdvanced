@@ -7,5 +7,6 @@ import java.util.List;
 public interface IOrderService {
     List<Order> findAll();
     void orderTable(int idCus);
-
+    Order findByTable(int idTable);
+    void updateIsPay(int orderId);
 }

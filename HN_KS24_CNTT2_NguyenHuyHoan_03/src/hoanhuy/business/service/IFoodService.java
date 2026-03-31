@@ -10,7 +10,8 @@ public interface IFoodService {
     void updateFood();
     void deleteFood();
     void findByName();
-    boolean findFoodById(int id);
+    MenuItem findFoodById(int id);
     List<MenuItem> getFoodsByPage(int page, int pageSize);
     int countFoods();
 }
+

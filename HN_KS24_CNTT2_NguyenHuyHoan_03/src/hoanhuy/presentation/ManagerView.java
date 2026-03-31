@@ -1,15 +1,18 @@
 package hoanhuy.presentation;
 
-import hoanhuy.business.service.IReviewService;
-import hoanhuy.business.service.IReviewServiceImpl;
-import hoanhuy.model.entity.Account;
-import hoanhuy.model.entity.Review;
+import com.mysql.cj.xdevapi.Schema;
+import hoanhuy.business.service.*;
+import hoanhuy.model.entity.*;
+import hoanhuy.utils.Color;
+import hoanhuy.validate.Validator;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class ManagerView {
     private static final IReviewService reviewService = new IReviewServiceImpl();
+    private static final IAccountLoginAndRegister accountLoginAndRegister = new IAccountLoginAndRegisterImpl();
+    private static final IManagerService managerService = new IManagerServiceImpl();
 
     public static void showManagerMenu(Account account) {
         Scanner sc = new Scanner(System.in);
@@ -43,8 +46,7 @@ public class ManagerView {
                 └────────────────────────────────┴───────────────────────────────────┘
                 """, account.getFullName());
 
-            System.out.print("Lựa chọn của bạn: ");
-            choice = Integer.parseInt(sc.nextLine());
+            choice = Validator.getInt(sc,"Lựa chọn của bạn : ");
 
             switch (choice) {
                 case 1:
@@ -54,19 +56,19 @@ public class ManagerView {
                     TableView.showTableManagement();
                     break;
                 case 3:
-                    System.out.println("Bạn đã chọn Tạo tài khoản Chef.");
+                    accountLoginAndRegister.addAccountChef();
                     break;
                 case 4:
-                    System.out.println("Bạn đã chọn Danh sách tài khoản.");
+                    displayAllAccounts();
                     break;
                 case 5:
-                    System.out.println("Bạn đã chọn Khóa / Mở tài khoản.");
+                    managerService.banAccount();
                     break;
                 case 6:
-                    System.out.println("Bạn đã chọn Duyệt order.");
+                    managerService.browseOrderItems();
                     break;
                 case 7:
-                    System.out.println("Bạn đã chọn Thanh toán hóa đơn.");
+                    managerService.payOrder();
                     break;
                 case 8:
                     System.out.println("Bạn đã chọn Thống kê báo cáo.");
@@ -147,6 +149,76 @@ public class ManagerView {
             }
         }
     }
+
+    private static void displayAllAccounts() {
+        Scanner sc = new Scanner(System.in);
+        int pageSize = 5;
+        int currentPage = 1;
+
+        int totalItems = accountLoginAndRegister.countAccounts();
+        if (totalItems == 0) {
+            System.out.println("Danh sách món ăn trống!");
+            return;
+        }
+
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        while (true) {
+            List<Account> listAccounts = accountLoginAndRegister.findByPage(currentPage, pageSize);
+
+            System.out.println("┌──────────────────────────────────────────────────────────────────────────┐");
+            System.out.println("│                            DANH SÁCH TÀI KHOẢN                           │");
+            System.out.println("├──────┬──────────────────────────┬──────────────┬────────────┬────────────┤");
+            System.out.println("│ ID   │ Họ và tên                │ Tài khoản    │ Vai trò    │ Trạng thái │");
+            System.out.println("├──────┼──────────────────────────┼──────────────┼────────────┼────────────┤");
+
+            for (Account item : listAccounts) {
+                System.out.printf("│ %-4d │ %-24s │ %-12s │ %-10s │ %-10s │%n",
+                        item.getAccountId(),
+                        item.getFullName(),
+                        item.getUsername(),
+                        item.getRole(),
+                        item.isBan() ? "Khóa" : "Mở");
+            }
+
+            int emptyRows = pageSize - listAccounts.size();
+            for (int i = 0; i < emptyRows; i++) {
+                System.out.printf("│ %-4s │ %-24s │ %-12s │ %-10s │ %-10s │%n", "", "", "", "", "");
+            }
+
+            System.out.println("├──────────────────────────────────────────────────────────────────────────┤");
+            System.out.printf("│                            Trang %d / %d                                   │%n", currentPage, totalPages, "");
+            System.out.println("├──────────────────────────────────────────────────────────────────────────┤");
+            System.out.println("│   P. Trang trước        N. Trang sau        0. Thoát                     │");
+            System.out.println("└──────────────────────────────────────────────────────────────────────────┘");
+
+            System.out.print("Lựa chọn của bạn: ");
+            String choice = sc.nextLine().trim().toUpperCase();
+
+            switch (choice) {
+                case "P":
+                    if (currentPage > 1) {
+                        currentPage--;
+                    } else {
+                        System.out.println("Bạn đang ở trang đầu tiên!");
+                    }
+                    break;
+                case "N":
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                    } else {
+                        System.out.println("Bạn đang ở trang cuối cùng!");
+                    }
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Lựa chọn không hợp lệ!");
+            }
+        }
+    }
+
+
 
 
 }
