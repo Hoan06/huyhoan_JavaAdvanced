@@ -17,7 +17,7 @@ public class Validator {
         do {
             try {
                 System.out.print(input);
-                return Integer.parseInt(sc.nextLine());
+                return Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println(Color.RED + "Hãy nhập số nguyên ! " + Color.RESET);
             }

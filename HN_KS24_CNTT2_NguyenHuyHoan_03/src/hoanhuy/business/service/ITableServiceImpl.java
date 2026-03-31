@@ -31,8 +31,7 @@ public class ITableServiceImpl implements ITableService {
         Table table = new Table();
         while (true) {
             boolean flag = true;
-            System.out.print("Nhập sức chứa của bàn : ");
-            int limit = Integer.parseInt(sc.nextLine());
+            int limit = Validator.getInt(sc , "Nhập sức chứa của bàn : ");
             if (limit <= 0) {
                 System.out.println(Color.YELLOW + "Sức chứa phải lớn hơn 0 !" + Color.RESET);
                 flag = false;
