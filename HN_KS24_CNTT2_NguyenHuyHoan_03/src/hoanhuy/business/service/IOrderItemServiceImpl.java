@@ -42,12 +42,13 @@ public class IOrderItemServiceImpl implements IOrderItemsService{
 
     @Override
     public int findOrderId(Account account) {
-        Order order = orderDao.findByCustomerId(account.getAccountId());
+        Order order = orderDao.findActiveOrderByCustomerId(account.getAccountId());
         if (order == null) {
             return -1;
         }
         return order.getId();
     }
+
 
     @Override
     public void cancelOrderItems() {

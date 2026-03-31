@@ -25,8 +25,27 @@ public class IOrderServiceImpl implements IOrderService {
     @Override
     public void orderTable(int idCus) {
         Scanner sc = new Scanner(System.in);
+        Order currentOrder = orderDao.findActiveOrderByCustomerId(idCus);
+        if (currentOrder != null) {
+            System.out.println(Color.YELLOW + "Bạn đang có bàn chưa thanh toán, không thể đặt bàn mới !" + Color.RESET);
+            return;
+        }
         Order order = new Order();
         int idTable;
+        List<Table> tables = tableDao.findAllTable();
+        System.out.println("┌────────────────────────────────────────────────┐");
+        System.out.println("│               DANH SÁCH BÀN ĂN                 │");
+        System.out.println("├──────┬──────────────────────────┬──────────────┤");
+        System.out.println("│ ID   │ Trạng thái bàn           │ Sức chứa     │");
+        System.out.println("├──────┼──────────────────────────┼──────────────┤");
+
+        for (Table item : tables) {
+            System.out.printf("│ %-4d │ %-24s │ %-12s │%n",
+                    item.getId(),
+                    item.isEmpty() ? "Còn trống" : "Đã được đặt",
+                    item.getLimited());
+        }
+        System.out.println("└────────────────────────────────────────────────┘");
         while (true) {
             try {
                 idTable = Validator.getInt(sc , "Nhập id bàn muốn đặt : ");

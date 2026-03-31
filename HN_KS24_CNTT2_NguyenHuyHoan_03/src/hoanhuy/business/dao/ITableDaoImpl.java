@@ -22,7 +22,7 @@ public class ITableDaoImpl implements ITableDao {
 
     @Override
     public List<Table> findAllTable() {
-        String sql = "select id , number , isEmpty , limited from tables";
+        String sql = "select id  , isEmpty , limited from tables";
         try (
                 Connection conn = DBConnection.openConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);

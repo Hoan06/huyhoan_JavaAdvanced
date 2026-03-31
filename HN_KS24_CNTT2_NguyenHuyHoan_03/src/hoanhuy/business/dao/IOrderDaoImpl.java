@@ -134,4 +134,28 @@ public class IOrderDaoImpl implements IOrderDao {
             return false;
         }
     }
+
+    @Override
+    public Order findActiveOrderByCustomerId(int idCus) {
+        String sql = "select id, customer_id, table_id, isPay, created_at " +
+                "from orders " +
+                "where customer_id = ? and isPay = ? " +
+                "order by created_at desc limit 1";
+        try (
+                Connection conn = DBConnection.openConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+        ) {
+            ps.setInt(1, idCus);
+            ps.setBoolean(2, false);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapToOrder(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println(Color.RED + "Lỗi truy vấn dữ liệu " + e.getMessage() + Color.RESET);
+            return null;
+        }
+        return null;
+    }
+
 }

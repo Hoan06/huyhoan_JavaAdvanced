@@ -168,6 +168,23 @@ public class CustomerView {
             System.out.println("Bạn chưa đặt bàn , hãy đặt bàn trước !");
             return;
         }
+        List<MenuItem> menuItems = foodService.getAllFood();
+        System.out.println("┌──────────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                            DANH SÁCH THỰC ĐƠN                            │");
+        System.out.println("├──────┬──────────────────────────┬──────────────┬────────────┬────────────┤");
+        System.out.println("│ ID   │ Tên món                  │ Giá          │ Loại       │ Số lượng   │");
+        System.out.println("├──────┼──────────────────────────┼──────────────┼────────────┼────────────┤");
+
+        for (MenuItem item : menuItems) {
+            System.out.printf("│ %-4d │ %-24s │ %-12s │ %-10s │ %-10d │%n",
+                    item.getId(),
+                    item.getName(),
+                    item.getPrice(),
+                    item.getType(),
+                    item.getStock());
+        }
+
+        System.out.println("└──────────────────────────────────────────────────────────────────────────┘");
         System.out.print("Nhập mã món ăn muốn gọi : ");
         int foodId = Integer.parseInt(sc.nextLine());
         if (Validator.isValidInt(foodId)) {
@@ -189,8 +206,13 @@ public class CustomerView {
 
     private static void getOrderItems(Account account) {
         int orderId = orderItemsService.findOrderId(account);
+        if (orderId == -1) {
+            System.out.println("Bạn chưa đặt bàn nên chưa có món nào để theo dõi !");
+            return;
+        }
+
         List<OrderItem> orderItems = orderItemsService.getAllOrderItems(orderId);
-        if (orderItems.isEmpty()) {
+        if (orderItems == null || orderItems.isEmpty()) {
             System.out.println("Bạn chưa đặt món nào !");
             return;
         }

@@ -11,4 +11,6 @@ public interface IOrderDao {
     Order findByTable(int idTable);
     Order findByCustomerId(int idCus);
     boolean updateIsPay(int orderId);
+    Order findActiveOrderByCustomerId(int idCus);
+
 }
