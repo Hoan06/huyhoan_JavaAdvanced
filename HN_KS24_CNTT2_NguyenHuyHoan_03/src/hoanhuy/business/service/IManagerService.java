@@ -12,4 +12,5 @@ public interface IManagerService {
     void browseOrderItems();
     void banAccount();
     void payOrder();
+    void statisticRevenue();
 }

@@ -27,7 +27,7 @@ public class CustomerView {
         do {
             System.out.printf("""
                 ┌────────────────────────────────────────────────────────────────────┐
-                │ Xin chào: %-20s                                                    │
+                    Xin chào: %s                                                       
                 ├────────────────────────────────┬───────────────────────────────────┤
                 │                                │                                   │
                 │     1. Danh sách món ăn        │     2. Chọn bàn                   │
@@ -69,12 +69,27 @@ public class CustomerView {
                     reviewService.insertReview(account.getAccountId());
                     break;
                 case 7:
-                    System.out.println("Đăng xuất thành công .");
+                    if (confirmLogout(sc)) {
+                        System.out.println("Đăng xuất thành công.");
+                    } else {
+                        choice = 0;
+                        System.out.println("Đã hủy đăng xuất.");
+                    }
                     break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ.");
             }
         } while (choice != 7);
+    }
+
+    private static boolean confirmLogout(Scanner sc) {
+        System.out.println("""
+            Bạn có chắc chắn muốn đăng xuất?
+            1. Có
+            2. Không
+            """);
+        int choice = Validator.getInt(sc, "Lựa chọn của bạn: ");
+        return choice == 1;
     }
 
     private static void displayAllFood() {

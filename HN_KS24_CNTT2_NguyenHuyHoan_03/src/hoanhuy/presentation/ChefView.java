@@ -19,7 +19,7 @@ public class ChefView {
         do {
             System.out.printf("""
                 ┌────────────────────────────────────────────────────────────────────┐
-                │ Xin chào: %-20s                                                    │
+                    Xin chào: %s                                                       
                 ├────────────────────────────────┬───────────────────────────────────┤
                 │                                │                                   │
                 │     1. Hiển thị danh sách món  │     2. Cập nhật trạng thái món    │
@@ -41,12 +41,27 @@ public class ChefView {
                     orderItemsService.updateStatusByChef();
                     break;
                 case 3:
-                    System.out.println("Đăng xuất .");
+                    if (confirmLogout(sc)) {
+                        System.out.println("Đăng xuất thành công.");
+                    } else {
+                        choice = 0;
+                        System.out.println("Đã hủy đăng xuất.");
+                    }
                     break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ.");
             }
         } while (choice != 3);
+    }
+
+    private static boolean confirmLogout(Scanner sc) {
+        System.out.println("""
+            Bạn có chắc chắn muốn đăng xuất?
+            1. Có
+            2. Không
+            """);
+        int choice = Validator.getInt(sc, "Lựa chọn của bạn: ");
+        return choice == 1;
     }
 
     private static void getAllOrder() {

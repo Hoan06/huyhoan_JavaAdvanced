@@ -20,7 +20,7 @@ public class RestaurantView {
         Scanner sc = new Scanner(System.in);
         int choice;
         do {
-            System.out.println("""
+            System.out.println(Color.CYAN + """
                 ┌───────────────────────┬
                 │       WELCOME TO      │
                 │ Restaurant Management │
@@ -33,7 +33,7 @@ public class RestaurantView {
                 │     3. Xem đánh giá   │     4. Thoát                │
                 │                       │                             │
                 └───────────────────────┴─────────────────────────────┘
-                """);
+                """ + Color.RESET);
             choice = Validator.getInt(sc,"Lựa chọn của bạn : ");
 
             switch (choice) {

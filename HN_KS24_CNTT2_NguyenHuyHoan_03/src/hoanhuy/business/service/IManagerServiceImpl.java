@@ -2,11 +2,15 @@ package hoanhuy.business.service;
 
 import hoanhuy.business.dao.IAccountDao;
 import hoanhuy.business.dao.IAccountDaoImpl;
+import hoanhuy.business.dao.IRevenueDao;
+import hoanhuy.business.dao.IRevenueDaoImpl;
+import hoanhuy.model.dto.Revenue;
 import hoanhuy.model.entity.*;
 import hoanhuy.utils.Color;
 import hoanhuy.validate.Validator;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,6 +20,7 @@ public class IManagerServiceImpl implements IManagerService {
     private static final IOrderService orderService = new IOrderServiceImpl();
     private static final IFoodService foodService = new IFoodServiceImpl();
     private static final IAccountDao accountDao = new IAccountDaoImpl();
+    private static final IRevenueDao revenueDao = new IRevenueDaoImpl();
 
     @Override
     public void browseOrderItems(){
@@ -169,6 +174,78 @@ public class IManagerServiceImpl implements IManagerService {
             default:
                 System.out.println(Color.YELLOW + "Lựa chọn không hợp lệ !" + Color.RESET);
         }
+    }
+
+    @Override
+    public void statisticRevenue() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("""
+            1. Thống kê doanh thu theo tháng
+            2. Thống kê doanh thu theo năm
+            """);
+        int choose = Validator.getInt(sc , "Lựa chọn của bạn : ");
+        if (Validator.isValidInt(choose) || choose < 1 || choose > 2) {
+            System.out.println(Color.YELLOW + "Lựa chọn không hợp lệ!" + Color.RESET);
+            return;
+        }
+        List<Revenue> revenues = new ArrayList<>();
+        if (choose == 1) {
+            int month = Validator.getInt(sc, "Nhập tháng: ");
+            int year = Validator.getInt(sc, "Nhập năm: ");
+
+            if (Validator.isValidInt(month) || month < 1 || month > 12 || Validator.isValidInt(year)) {
+                System.out.println(Color.YELLOW + "Tháng hoặc năm không hợp lệ!" + Color.RESET);
+                return;
+            }
+
+            revenues = revenueDao.getRevenuesByMonth(month, year);
+            if (revenues.isEmpty()) {
+                System.out.println(Color.YELLOW + "Không có dữ liệu doanh thu trong tháng này!" + Color.RESET);
+                return;
+            }
+
+            System.out.println("+----------------+--------------+----------------------+");
+            System.out.printf("| %-14s | %-12s | %-20s |%n", "Ngày", "Số hóa đơn", "Doanh thu");
+            System.out.println("+----------------+--------------+----------------------+");
+
+            for (Revenue revenue : revenues) {
+                System.out.printf("| %-14s | %-12d | %-20s |%n",
+                        revenue.getTimeLabel(),
+                        revenue.getTotalOrders(),
+                        revenue.getTotalRevenue());
+            }
+
+            System.out.println("+----------------+--------------+----------------------+");
+        } else {
+            int year = Validator.getInt(sc, "Nhập năm: ");
+
+            if (Validator.isValidInt(year)) {
+                System.out.println(Color.YELLOW + "Năm không hợp lệ!" + Color.RESET);
+                return;
+            }
+
+            revenues = revenueDao.getRevenuesByYear(year);
+
+            if (revenues.isEmpty()) {
+                System.out.println(Color.YELLOW + "Không có dữ liệu doanh thu trong năm này!" + Color.RESET);
+                return;
+            }
+
+            System.out.println("+----------------+--------------+----------------------+");
+            System.out.printf("| %-14s | %-12s | %-20s |%n", "Tháng", "Số hóa đơn", "Doanh thu");
+            System.out.println("+----------------+--------------+----------------------+");
+
+            for (Revenue revenue : revenues) {
+                System.out.printf("| %-14s | %-12d | %-20s |%n",
+                        "Tháng " + revenue.getTimeLabel() + "/" + year,
+                        revenue.getTotalOrders(),
+                        revenue.getTotalRevenue());
+            }
+
+            System.out.println("+----------------+--------------+----------------------+");
+        }
+
     }
 
     private static void removeOrderItems(List<OrderItem> orderItems) {

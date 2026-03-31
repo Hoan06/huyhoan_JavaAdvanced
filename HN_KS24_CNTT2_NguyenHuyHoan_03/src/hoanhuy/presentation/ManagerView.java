@@ -22,7 +22,7 @@ public class ManagerView {
             System.out.printf("""
                 ┌────────────────────────────────────────────────────────────────────┐
                 │                    QUẢN LÝ NHÀ HÀNG - MANAGER                      │
-                │ Xin chào: %-58s                                                    │
+                    Xin chào: %-58s
                 ├────────────────────────────────┬───────────────────────────────────┤
                 │                                │                                   │
                 │     1. Quản lý món ăn          │     2. Quản lý bàn ăn             │
@@ -71,19 +71,35 @@ public class ManagerView {
                     managerService.payOrder();
                     break;
                 case 8:
-                    System.out.println("Bạn đã chọn Thống kê báo cáo.");
+                    managerService.statisticRevenue();
                     break;
                 case 9:
                     displayAllReviews();
                     break;
                 case 10:
-                    System.out.println("Đăng xuất thành công.");
+                    if (confirmLogout(sc)) {
+                        System.out.println("Đăng xuất thành công.");
+                    } else {
+                        choice = 0;
+                        System.out.println("Đã hủy đăng xuất.");
+                    }
                     break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ.");
             }
         } while (choice != 10);
     }
+
+    private static boolean confirmLogout(Scanner sc) {
+        System.out.println("""
+            Bạn có chắc chắn muốn đăng xuất?
+            1. Có
+            2. Không
+            """);
+        int choice = Validator.getInt(sc, "Lựa chọn của bạn: ");
+        return choice == 1;
+    }
+
 
     private static void displayAllReviews() {
         Scanner sc = new Scanner(System.in);
